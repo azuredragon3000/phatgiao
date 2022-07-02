@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">QuizPhatGiao</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="startgame">Bắt Đầu</string>
+    <string name="truyenphatgiao">Truyện Phật Giáo</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="clock">30s</string>
+    <string name="point">question 0</string>
+    <string name="question">question</string>
+    <string name="ans1">ans1</string>
+    <string name="ans2">ans2</string>
+    <string name="ans3">ans3</string>
+    <string name="ans4">ans4</string>
+    <string name="level1">level 1</string>
+    <string name="level2">LEVEL 2</string>
+    <string name="level3">LEVEL 3</string>
+    <string name="level4">LEVEL 4</string>
+    <string name="level5">LEVEL 5</string>
+    <string name="level">level 0</string>
+    <string name="title_activity_game">Đố Vui Phật Giáo</string>
+    <string name="start">bắt đầu game</string>
+    <string name="do_vui_phat_giao">Đố Vui Phật Giáo</string>
+    <string name="con_duong_giac_ngo">Con Đường Giác Ngộ</string>
+    <string name="yourpoint">point: 0</string>
+</resources>
