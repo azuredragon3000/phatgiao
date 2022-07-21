@@ -2,8 +2,10 @@ package com.example.quizphatgiao;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,7 +26,6 @@ public class FirstFragment extends Fragment  {
     DatabasePhatGiao databasePhatGiao;
     int curLevel;
     boolean clicked;
-    //Question[] questions;
     Question currentQuestion;
     int num;
 
@@ -34,25 +35,10 @@ public class FirstFragment extends Fragment  {
             Bundle savedInstanceState
     ) {
         clicked = false;
-
-
-
-        //questions = getQuestion();
         num = 0;
         binding = FragmentGameFirstBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
-
-    /*private Question[] getQuestion() {
-       *//* Question[] questions = new Question[5];
-        questions[0] = new Question("question1","a1","b1","c1","d1",1);
-        questions[1] = new Question("question2","a2","b2","c2","d2",1);
-        questions[2] = new Question("question3","a3","b3","c3","d3",1);
-        questions[3] = new Question("question4","a4","b4","c4","d4",1);
-        questions[4] = new Question("question5","a5","b5","c5","d5",1);*//*
-        return questions;
-    }*/
 
     @SuppressLint("SetTextI18n")
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -84,11 +70,9 @@ public class FirstFragment extends Fragment  {
         binding.ans4.setOnClickListener(v->{
             showDialog(checkResult(currentQuestion, 4));
         });
-
     }
 
     private Question getRandomQuestion() {
-
         int random = FunctionCommon.getRandom(619,0);
         Question question = databasePhatGiao.getQuestion(random);
         return  question;
@@ -127,7 +111,6 @@ public class FirstFragment extends Fragment  {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                       // clicked = false;
                     }
                 });
         alertDialog.show();
@@ -163,11 +146,9 @@ public class FirstFragment extends Fragment  {
                             loadNextQuestion();
                         }else{
                             showDialog4();
-                            //loadNextLevel();
                         }
                         //move to next activity
                         dialog.dismiss();
-                        //clicked = false;
                     }
                 });
         alertDialog.show();

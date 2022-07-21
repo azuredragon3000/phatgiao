@@ -5,15 +5,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Path;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.quizphatgiao.databinding.FragmentGameSecondBinding;
+import com.myapp.mylibrary.ads.AdsInterstitial;
 
 public class SecondFragment extends Fragment  {
 
@@ -33,20 +30,27 @@ public class SecondFragment extends Fragment  {
     Level curLevel;
     Level[] setLevel;
     boolean animationlistener;
-    boolean m_continue;
     boolean e_run;
     int duration;
+    AdsInterstitial adsInterstitial;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // if(savedInstanceState == null) {
-            animationlistener = false;
-            setLevel = new Level[25];
-            setLevel[0] = new Level(50, 100, 1);
-            setLevel[1] = new Level(150, 100, 2);
-            setLevel[2] = new Level(250, 100, 3);
-            setLevel[3] = new Level(350, 100, 4);
-            setLevel[4] = new Level(450, 100, 5);
+
+        adsInterstitial = new AdsInterstitial(
+                "07CC7E40850ABA2DF210A2D2564CAD76",
+                "ca-app-pub-8404443559572571/9913894405",
+                requireContext());
+
+
+        animationlistener = false;
+        setLevel = new Level[25];
+        setLevel[0] = new Level(50, 100, 1);
+        setLevel[1] = new Level(150, 100, 2);
+        setLevel[2] = new Level(250, 100, 3);
+        setLevel[3] = new Level(350, 100, 4);
+        setLevel[4] = new Level(450, 100, 5);
 
         setLevel[5] = new Level(50, 200, 6);
         setLevel[6] = new Level(150, 200, 7);
@@ -72,21 +76,15 @@ public class SecondFragment extends Fragment  {
         setLevel[23] = new Level(350, 500, 24);
         setLevel[24] = new Level(450, 500, 25);
 
-            curLevel = getLevel(setLevel[0]);
-            e_run = false;
-            duration = 4000;
+        curLevel = getLevel(setLevel[0]);
+        e_run = false;
+        duration = 4000;
 
-            //m_continue = getContinue();
-        //}
     }
 
     private boolean getContinue() {
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        // int defaultValue = getResources().getInteger(R.integer.saved_high_score_default_key);
-        //  int highScore = sharedPref.getInt(getString(R.string.saved_high_score_key), defaultValue);
         return sharedPref.getBoolean("CNT",false);
-
-        //return new Level(x,y,1);
     }
 
     @Override
@@ -94,20 +92,14 @@ public class SecondFragment extends Fragment  {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
-
-
         binding = FragmentGameSecondBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         modelSecondFragment.getSelected().observe(getViewLifecycleOwner(), item -> {
-            //curLevel.level = item;
-            //animation = true;
             if(item.pass){
                 int previous_item = item.level-1;
                 for (Level level : setLevel) {
@@ -125,7 +117,6 @@ public class SecondFragment extends Fragment  {
                         break;
                     }
                 }
-                //e_run = false;
                 duration = 4000;
                 binding.button.setVisibility(View.INVISIBLE);
             }else{
@@ -137,47 +128,38 @@ public class SecondFragment extends Fragment  {
                 }
                 binding.level.setX(curLevel.x);
                 binding.level.setY(curLevel.y);
-                //e_run = true;
-                //animationlistener = true;
                 duration = 0;
                 binding.button.setVisibility(View.VISIBLE);
             }
 
         });
 
+        ObjectAnimator animY = ObjectAnimator.ofFloat(binding.level, "translationY", curLevel.y);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(binding.level, "translationX", curLevel.x);
 
-       // if(!e_run) {
-            ObjectAnimator animY = ObjectAnimator.ofFloat(binding.level, "translationY", curLevel.y);
-            ObjectAnimator animX = ObjectAnimator.ofFloat(binding.level, "translationX", curLevel.x);
+        AnimatorSet animSetXY = new AnimatorSet();
+        animSetXY.playTogether(animY, animX);
+        animSetXY.setDuration(duration);
+        animSetXY.start();
+        animSetXY.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
 
-            AnimatorSet animSetXY = new AnimatorSet();
-            animSetXY.playTogether(animY, animX);
-            animSetXY.setDuration(duration);
-            animSetXY.start();
-            animSetXY.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationlistener = true;
+                binding.button.setVisibility(View.VISIBLE);
+            }
 
-                }
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    //boolean a = true;
-                    animationlistener = true;
-                    binding.button.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-       // }
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
     }
 
     @Override
@@ -192,10 +174,6 @@ public class SecondFragment extends Fragment  {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // initialize set level
-        //binding.level.setX(curLevel.x);
-        //binding.level.setY(curLevel.y);
         binding.button.setVisibility(View.INVISIBLE);
         modelFirstFragment = new ViewModelProvider(requireActivity()).get(ShareViewModelFirstFragment.class);
         modelSecondFragment = new ViewModelProvider(requireActivity()).get(ShareViewModelSecondFragment.class);
@@ -205,7 +183,6 @@ public class SecondFragment extends Fragment  {
             @Override
             public void onGlobalLayout() {
                 if(view.getHeight() > 0 && view.getWidth() > 0) {
-                    //cache values
                     width = view.getWidth();
                     height = view.getHeight();
                     view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -215,26 +192,18 @@ public class SecondFragment extends Fragment  {
 
         binding.button.setOnClickListener(v->{
             if(animationlistener) {
-                // set position next level
-
-               // binding.level.setX(curLevel.x);
-               // binding.level.setY(curLevel.y);
                 NavHostFragment.findNavController(SecondFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
                 modelFirstFragment.select(curLevel.level);
+
+                adsInterstitial.showAds(requireActivity());
+
             }
         });
 
     }
 
     private Level getLevel(Level level) {
-
-       // SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-       // int defaultValue = getResources().getInteger(R.integer.saved_high_score_default_key);
-      //  int highScore = sharedPref.getInt(getString(R.string.saved_high_score_key), defaultValue);
-       // float x = sharedPref.getFloat("PREVIOUS_X",level.x);
-       // float y = sharedPref.getFloat("PREVIOUS_Y",level.y);
-
         return level;
     }
 
@@ -243,6 +212,5 @@ public class SecondFragment extends Fragment  {
         super.onDestroyView();
         binding = null;
     }
-
 
 }
