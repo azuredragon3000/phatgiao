@@ -1,4 +1,4 @@
-package com.example.quizphatgiao;
+package com.myapp.quizphatgiao;
 
 import org.junit.Test;
 

@@ -6,11 +6,11 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.quizphatgiao"
+        applicationId "com.myapp.quizphatgiao"
         minSdk 22
         targetSdk 32
-        versionCode 36
-        versionName "36.0"
+        versionCode 101
+        versionName "101.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
